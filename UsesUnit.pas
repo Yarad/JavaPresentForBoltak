@@ -15,6 +15,9 @@ type
     fAmount: Integer;
     fInternal: TInternalConstr;
   end;
+  
+const
+  COperationsUsed: array[0..4] of string = ('=', '+=', '-=', '*=', '/=');
 
 function CreateElement(fLevel: Integer; fConstr: TConstructionType;fAmount: Integer = 0): tRec;
 
