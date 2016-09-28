@@ -1,0 +1,20 @@
+unit Tree;
+
+interface
+
+uses
+  usesUnit;
+
+function trCreateRoot: ptRec;
+function trAddElement(const ptNode: pTRec; AddedElement: tRec): pTRec;
+
+implementation
+
+function trCreateRoot;
+begin
+  New(result);
+  CreateElement(0, C_modul);
+end;
+
+end.
+

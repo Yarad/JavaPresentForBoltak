@@ -1,0 +1,15 @@
+program JavaProject;
+
+uses
+  Forms,
+  Java in 'Java.pas' {Form1},
+  UsesUnit in 'UsesUnit.pas',
+  Tree in 'Tree.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TForm1, Form1);
+  Application.Run;
+end.
