@@ -4,15 +4,16 @@ program JavaProject;
 
 uses
   Forms,
-  Java in 'Java.pas' {Form1},
+  Java in 'Java.pas' {frmMain},
   UsesUnit in 'UsesUnit.pas',
   Tree in 'Tree.pas',
-  ConstrFunctions in 'ConstrFunctions.pas';
+  ConstrFunctions in 'ConstrFunctions.pas',
+  OtherFunctions in 'OtherFunctions.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TfrmMain, frmMain);
   Application.Run;
 end.

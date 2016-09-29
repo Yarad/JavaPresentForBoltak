@@ -18,6 +18,7 @@ type
 
 const
   CArrayOperators: array[0..4] of string = ('=', '+=', '-=', '*=', '/=');
+  MS_NO_TEXR_FILE: string = 'Файл не выбран!';
 
 function CreateElement(fLevel: Integer; fConstr: TConstructionType;fAmount: Integer = 0): tRec;
 

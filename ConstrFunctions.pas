@@ -33,9 +33,9 @@ var tempStr: string;
     constrType: TConstructionType;
 begin
   tempStr:=GetStringFromMemo(memoPos, memoCode);
-  constrType:=RecogniseOperation(tempStr);
+  //constrType:=RecogniseOperation(tempStr);
   if constrType=c_Operation
-  then ptNode^.fAmount:=ptNode^.fAmount+AmountOfOperations(tempStr)
+  then //ptNode^.fAmount:=ptNode^.fAmount+AmountOfOperations(tempStr)
   else cfDefineTypeOfExpression(memoPos, ptNode, memoCode, constrType);
 end;
 
