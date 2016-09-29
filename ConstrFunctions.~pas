@@ -1,0 +1,89 @@
+unit ConstrFunctions;
+
+interface
+
+uses UsesUnit;
+
+procedure cfIf_Operate(var memoPos: integer; const ptNode: pTRec);
+procedure cfSwitch_Operate(var memoPos: integer; const ptNode: pTRec);
+procedure cfCycle_Operate(var memoPos: integer; const ptNode: pTRec);
+
+//Увеличивать везде в зависимости от условия, его наличия (см. методу)
+
+implementation
+
+uses Tree;
+
+function cfDefineEndSymbol(const memoPos: integer; findSymb, thenSymb, elseSymb: string): string;
+begin
+  if pos(findSymb, GetStringFromMemo(memoPos))<>0
+  then result:=thenSymb
+  else result:=elseSymb;
+end;
+
+procedure cfCycleFindOperationsUntilFoundEndSymbol(const endIfSign: string; var memoPos: integer; var operatorsAmount: integer);
+var tempStr: string;
+    constrType: TConstructionType;
+begin
+  repeat
+    inc(memoPos);
+    tempStr:=GetStringFromMemo(memoPos);
+    constrType:=RecogniseOperation(tempStr);
+    if constrType=c_Operation
+    then operatorsAmount:=operatorsAmount+AmountOfOperations(tempStr)
+    else DefineAndRunConstructionParseFunc(constrType);
+  until pos(endIfSign, tempstr)<>0;
+end;
+
+procedure cfIf_Operate(var memoPos: integer; const ptNode: pTRec);
+var endIfSign: string;
+begin
+  endIfSign:=cfDefineEndSymbol(memoPos+1, '{', '}', ';');
+  cfCycleFindOperationsUntilFoundEndSymbol(endIfSign, memoPos, ptNode^.fAmount);
+  if pos('else', GetStringFromMemo(memoPos+1))<>0
+  then begin
+    endIfSign:=cfDefineEndSymbol(memoPos+1, '{', '}', ';');
+    cfCycleFindOperationsUntilFoundEndSymbol(endIfSign, memoPos, ptNode^.fAmount);
+  end;
+  inc(memoPos);
+end;
+
+procedure cfSwitch_Operate(var memoPos: integer; const ptNode: pTRec);
+var ptCurNode: ptRec;
+    subTreeCount, figureLevel, curMemoPos: integer;
+begin
+  curMemoPos:=memoPos;
+  repeat
+    inc(curMemoPos);
+    if (pos('case', GetStringFromMemo(curMemoPos))<>0) or (pos('default', GetStringFromMemo(curMemoPos))<>0)
+    then inc(subTreeCount);
+    if pos('{', GetStringFromMemo(curMemoPos))<>0
+    then inc(figureLevel);
+    if pos('}', GetStringFromMemo(curMemoPos))<>0
+    then dec(figureLevel);
+  until (pos('}', GetStringFromMemo(memoPos))<>0) and (figureLevel=-1);
+  inc(memoPos);
+  ptCurNode:=ptNode;
+  repeat
+    if pos('case', GetStringFromMemo(memoPos))<>0
+    then begin
+      cfCycleFindOperationsUntilFoundEndSymbol('break', memoPos, ptCurNode^.fAmount);
+      if subTreeCount>1
+      then begin
+        dec(subTreeCount);
+        ptCurNode:=trAddElement(ptCurNode, ptCurNode^.fLevel+1, ptCurNode^.fConstr);
+      end;
+    end;
+    inc(memoPos);
+  until pos('}', GetStringFromMemo(memoPos))<>0;
+  inc(memoPos);
+end;
+
+procedure cfCycle_Operate(var memoPos: integer; const ptNode: pTRec);
+begin
+  cfCycleFindOperationsUntilFoundEndSymbol('}', memoPos, ptNode^.fAmount);
+  inc(memoPos);
+end;
+
+end.
+

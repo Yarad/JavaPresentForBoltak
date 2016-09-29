@@ -1,10 +1,13 @@
 program JavaProject;
 
+//Правильность кода
+
 uses
   Forms,
   Java in 'Java.pas' {Form1},
   UsesUnit in 'UsesUnit.pas',
-  Tree in 'Tree.pas';
+  Tree in 'Tree.pas',
+  ConstrFunctions in 'ConstrFunctions.pas';
 
 {$R *.res}
 

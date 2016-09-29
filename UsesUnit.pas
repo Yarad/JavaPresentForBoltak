@@ -3,7 +3,7 @@ unit UsesUnit;
 interface
 
 type
-  TConstructionType = (C_modul, C_comment, C_other, c_if, c_case, c_for, c_WhileDo, c_DoWhile);
+  TConstructionType = (C_modul, C_other, c_if, c_switch, c_cycle, c_Operation);
 
   pTRec = ^tRec;
 
@@ -15,9 +15,9 @@ type
     fAmount: Integer;
     fInternal: TInternalConstr;
   end;
-  
+
 const
-  COperationsUsed: array[0..4] of string = ('=', '+=', '-=', '*=', '/=');
+  CArrayOperators: array[0..4] of string = ('=', '+=', '-=', '*=', '/=');
 
 function CreateElement(fLevel: Integer; fConstr: TConstructionType;fAmount: Integer = 0): tRec;
 
