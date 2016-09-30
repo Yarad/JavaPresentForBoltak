@@ -132,7 +132,7 @@ begin
       until CommentPosE <> 0;
       CommentStrE := i - 1;
 
-      if CommentStrB = CommentStrE then
+      if CommentStrB = CommentStrE then  //здесь ещё не дописано
       begin
         TempStr := Input.Strings[i];
         Delete(TempStr, CommentPosB, Length(Input.Strings[i]) - CommentPoE + 1);
