@@ -3,7 +3,7 @@ unit ParseAndRecognise;
 interface
 
 uses
-  UsesUnit;
+  UsesUnit, Classes;
 
 function AmountOfOperations(const s: string): Integer; //кол-во операций в строке
 
@@ -12,14 +12,20 @@ function RecogniseOperation(const Input: string): TConstructionType;
 function ConvertStrToType(const s: string): TConstructionType; //ставит в соответствие 'if'-строке тип C_if
 
 
+procedure DeleteComments(var Input: TStrings);
+
 implementation
 
 function RecogniseOperation;
 var
   i, FoundPos: Integer;
   NextSymbolAfterID: Char; // символ после ключевого слова, котрое мы ищем
+
+
 begin
-  //Result := C_other;    //<-если ничего не найдём
+  Result := C_other;    //<-если ничего не найдём
+
+
 
   for i := Low(CIDsOfOperations) to High(CIDsOfOperations) do
   begin
@@ -37,7 +43,7 @@ begin
   for i := Low(COperationsUsed) to High(COperationsUsed) do
   begin
     FoundPos := Pos(COperationsUsed[i], Input);
-    if (i <> 0) then
+    if (FoundPos <> 0) then
     begin
       Result := c_operation;
       Exit;
@@ -83,12 +89,58 @@ begin
       i := Pos(COperationsUsed[Oper], UnParsedString);
 
       if i <> 0 then //если нашли
+
+
       begin
         Inc(Result);
         Delete(UnParsedString, i, Length(COperationsUsed[Oper]));
       end
 
     until i = 0
+end;
+
+procedure DeleteComments;
+var
+  CommentPosB, CommentPosE, CommentStrB, CommentStrE, i: Integer;
+  TempStr: string;
+begin
+  i := 0;
+  while i < Input.Capacity do   //возможно, нужно уменьшить на 1
+  begin
+     //1. Удаление однострочного комментария
+    CommentPosB := Pos('//', Input[i]);
+    if i <> 0 then
+    begin
+      TempStr := Input.Strings[i];
+      Delete(TempStr, CommentPosB, Length(Input.Strings[i]) - CommentPosB + 1);
+      Input.Strings[i] := TempStr;
+    end;
+  end;
+
+  i := 0;
+  while i < Input.Capacity do   //возможно, нужно уменьшить на 1
+  begin
+     //1. Удаление однострочного комментария
+    CommentPosB := Pos('/*', Input[i]);
+    CommentStrB := i;
+    if i <> 0 then
+    begin
+
+      repeat
+        CommentPosE := Pos('*/', Input[i]);
+        Inc(i);
+      until CommentPosE <> 0;
+      CommentStrE := i - 1;
+
+      if CommentStrB = CommentStrE then  //здесь ещё не дописано
+      begin
+        TempStr := Input.Strings[i];
+        Delete(TempStr, CommentPosB, Length(Input.Strings[i]) - CommentPoE + 1);
+        Input.Strings[i] := TempStr;
+      end;
+    end;
+  end;
+
 end;
 
 end.

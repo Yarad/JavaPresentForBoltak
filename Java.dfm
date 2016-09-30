@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
-  Left = 349
-  Top = 165
+  Left = 87
+  Top = 121
   Width = 1068
   Height = 590
   Caption = #1052#1077#1090#1088#1086#1083#1086#1075#1080#1103
@@ -37,6 +37,24 @@ object frmMain: TfrmMain
     Height = 33
     Action = aLoadCode
     TabOrder = 1
+  end
+  object btnTest: TButton
+    Left = 872
+    Top = 424
+    Width = 75
+    Height = 25
+    Caption = 'btnTest'
+    TabOrder = 2
+    OnClick = btnTestClick
+  end
+  object mmoTest: TMemo
+    Left = 832
+    Top = 320
+    Width = 185
+    Height = 89
+    Lines.Strings = (
+      'mmoTest')
+    TabOrder = 3
   end
   object dlgFileOpen: TOpenDialog
     Filter = 'Java Files|*.java'

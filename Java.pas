@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ActnList, UsesUnit;
+  Dialogs, StdCtrls, ActnList, UsesUnit,ParseAndRecognise;
 
 type
   TfrmMain = class(TForm)
@@ -14,7 +14,10 @@ type
     dlgFileOpen: TOpenDialog;
     alMain: TActionList;
     aLoadCode: TAction;
+    btnTest: TButton;
+    mmoTest: TMemo;
     procedure aLoadCodeExecute(Sender: TObject);
+    procedure btnTestClick(Sender: TObject);
   private
     procedure CalcMetriks(const fileName: string);
     { Private declarations }
@@ -47,6 +50,14 @@ begin
   ofDeleteComments(tempStr);
   memoCode.Lines.Text:=tempStr;
   memoCode.Lines.EndUpdate;
+end;
+
+procedure TfrmMain.btnTestClick(Sender: TObject);
+var Test : integer;
+begin
+   Test := AmountOfOperations(mmoTest.Lines[0]);
+  mmoTest.Lines.Add(IntToStr(Test));
+
 end;
 
 end.
