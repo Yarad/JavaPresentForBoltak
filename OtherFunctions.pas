@@ -94,7 +94,7 @@ begin
       Break;
     end
   end;
-  for i := 0 to Length(Input) - 1 do
+  for i := 1 to Length(Input) do
     if Input[i] = BrakeSymbolClose then
       BrakesClosePos := i;
       
