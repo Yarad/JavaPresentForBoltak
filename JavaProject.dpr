@@ -8,8 +8,7 @@ uses
   UsesUnit in 'UsesUnit.pas',
   Tree in 'Tree.pas',
   ConstrFunctions in 'ConstrFunctions.pas',
-  OtherFunctions in 'OtherFunctions.pas',
-  ParseAndRecognise in 'ParseAndRecognise.pas';
+  OtherFunctions in 'OtherFunctions.pas';
 
 {$R *.res}
 

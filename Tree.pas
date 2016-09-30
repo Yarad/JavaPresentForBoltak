@@ -13,7 +13,7 @@ implementation
 function trCreateRoot;
 begin
   New(result);
-  CreateElement(0, C_modul);
+  result^:=CreateElement(0, C_modul, 0);
 end;
 
 function trAddElement;
@@ -23,7 +23,8 @@ begin
   addedElement:=CreateElement(fLevel, fConstr, fAmount);
   tempLen := Length(ptNode^.fInternal);
   SetLength(ptNode^.fInternal, tempLen+1);
-  ptNode^.fInternal[tempLen]:=@AddedElement;
+  New(ptNode^.fInternal[tempLen]);
+  ptNode^.fInternal[tempLen]^:=addedElement;
   result:=ptNode^.fInternal[tempLen];
 end;
 

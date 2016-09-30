@@ -26,19 +26,30 @@ begin
   memoCode.Lines.Text:=trim(memoCode.Lines.Text);
 end;
 
-procedure ofDeleteStringPartFromTo(var str: string; const strBegin, strEnd: string);
+procedure ofDeleteStringPartFromTo(var str: string; const strBegin, strEnd: string; const with1, with2: boolean);
 var tempStr: string;
-    posSymb, commentLen, strLen, strEndLen: integer;
+    posSymb, commentLen, strLen, strEndLen, strBeginLen: integer;
 begin
   strLen:=Length(str);
   strEndLen:=Length(strEnd);
+  strBeginLen:=Length(strBegin);
   while pos(strBegin, str)<>0
   do begin
     posSymb:=pos(strBegin, str);
     tempStr:=copy(str, posSymb, strLen+1-posSymb);
     commentLen:=pos(strEnd, tempStr);
     if commentLen<>0
-    then delete(str, posSymb, commentLen-1+strEndLen)
+    then begin
+      if (with1) and (with2)
+      then delete(str, posSymb, commentLen-1+strEndLen)
+      else
+        if with1
+        then delete(str, posSymb, commentLen-1)
+        else
+          if with2
+          then delete(str, posSymb+strBeginLen, commentLen-1+strEndLen)
+          else delete(str, posSymb+strBeginLen, commentLen-1);
+    end
     else delete(str, posSymb, strLen+1-posSymb);
   end;
 end;
@@ -56,13 +67,39 @@ begin
   end;
 end;
 
+procedure AddNewLinesAfterSymbol(var str: string; const expression: string);
+var posSymb, addedLen: integer;
+    tempStr: string;
+begin
+  tempStr:=str;
+  addedLen:=0;
+  while pos(expression, tempStr)<>0
+  do begin
+    posSymb:=pos(expression, tempStr);
+    addedLen:=addedLen+posSymb;
+    insert(#13#10, str, addedLen+Length(expression));
+    insert(#13#10, str, addedLen);
+    addedLen:=addedLen+4;
+    delete(tempStr, 1, posSymb);
+  end;
+end;
+
 procedure ofDeleteComments(var str: string);
 begin
-  ofDeleteStringPartFromTo(str, '//', #13#10);
-  ofDeleteStringPartFromTo(str, '/*', '*/');
+  ofDeleteStringPartFromTo(str, '//', #13#10, true, false);
+  ofDeleteStringPartFromTo(str, '/*', '*/', true, true);
+  //ofDeleteStringPartFromTo(str, '(', ')', false, false);
+  //ofDeleteStringPartFromTo(str, '[', ']', false, false);
+  ofReplaceAll(str, #9, ' ');
+  ofReplaceAll(str, #13#10+' ', #13#10);
+  ofReplaceAll(str, ' '+#13#10, #13#10);
+  AddNewLinesAfterSymbol(str, '{'+ #13#10);
+  AddNewLinesAfterSymbol(str, 'else');
+  AddNewLinesAfterSymbol(str, #13#10+'}');
   ofReplaceAll(str, '  ', ' ');
   ofReplaceAll(str, #13#10+' '+#13#10, #13#10);
   ofReplaceAll(str, #13#10#13#10, #13#10);
+  ofReplaceAll(str, #13#13#10#10, #13#10);
   if pos(#13#10, str)=1
   then delete(str, 1, 2);
 end;

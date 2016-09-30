@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ActnList, UsesUnit,ParseAndRecognise;
+  Dialogs, StdCtrls, ActnList, UsesUnit;
 
 type
   TfrmMain = class(TForm)
@@ -14,12 +14,11 @@ type
     dlgFileOpen: TOpenDialog;
     alMain: TActionList;
     aLoadCode: TAction;
-    btnTest: TButton;
-    mmoTest: TMemo;
     procedure aLoadCodeExecute(Sender: TObject);
-    procedure btnTestClick(Sender: TObject);
   private
     procedure CalcMetriks(const fileName: string);
+    procedure LoadTextAndDecode(const fileName: string);
+    procedure CreateTreeFromCode(memoCode: TMemo);
     { Private declarations }
   public
     { Public declarations }
@@ -32,7 +31,7 @@ implementation
 
 {$R *.dfm}
 
-uses OtherFunctions, ConstrFunctions;
+uses OtherFunctions, ConstrFunctions, Tree;
 
 procedure TfrmMain.aLoadCodeExecute(Sender: TObject);
 begin
@@ -40,7 +39,7 @@ begin
   then CalcMetriks(dlgFileOpen.Files[0]);
 end;
 
-procedure TfrmMain.CalcMetriks(const fileName: string);
+procedure TfrmMain.LoadTextAndDecode(const fileName: string);
 var tempStr: string;
 begin
   memoCode.Lines.BeginUpdate;
@@ -52,12 +51,23 @@ begin
   memoCode.Lines.EndUpdate;
 end;
 
-procedure TfrmMain.btnTestClick(Sender: TObject);
-var Test : integer;
+procedure TfrmMain.CalcMetriks(const fileName: string);
 begin
-   Test := AmountOfOperations(mmoTest.Lines[0]);
-  mmoTest.Lines.Add(IntToStr(Test));
+  LoadTextAndDecode(fileName);
+  CreateTreeFromCode(memoCode);
+end;
 
+procedure TfrmMain.CreateTreeFromCode(memoCode: TMemo);
+var memoPos: integer;
+    tree: ptRec;
+begin
+  tree:=trCreateRoot;
+  memoPos:=0;
+  while (memoPos<memoCode.Lines.Count)
+  do begin
+    if cfDecodeString(memoPos, tree, memoCode.Lines)
+    then inc(memoPos);
+  end;
 end;
 
 end.

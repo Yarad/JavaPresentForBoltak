@@ -4,7 +4,7 @@ interface
 
 uses UsesUnit, Classes;
 
-procedure cfDecodeString(var memoPos: integer; var ptNode: pTRec; const memoCode: TStrings);
+function cfDecodeString(var memoPos: integer; var ptNode: pTRec; const memoCode: TStrings): boolean;
 procedure cfIf_Operate(var memoPos: integer; var ptNode: pTRec; const memoCode: TStrings);
 procedure cfSwitch_Operate(var memoPos: integer; var ptNode: pTRec; const memoCode: TStrings);
 procedure cfCycle_Operate(var memoPos: integer; var ptNode: pTRec; const memoCode: TStrings);
@@ -28,14 +28,17 @@ begin
   end;
 end;
 
-procedure cfDecodeString(var memoPos: integer; var ptNode: pTRec; const memoCode: TStrings);
+function cfDecodeString(var memoPos: integer; var ptNode: pTRec; const memoCode: TStrings): boolean;
 var tempStr: string;
     constrType: TConstructionType;
 begin
+  result:=false;
   tempStr:=GetStringFromMemo(memoPos, memoCode);
-  //constrType:=RecogniseOperation(tempStr);
+  constrType:=RecogniseOperation(tempStr);
+  if (constrType=c_Operation) or (constrType=c_modul)
+  then result:=true;
   if constrType=c_Operation
-  then //ptNode^.fAmount:=ptNode^.fAmount+AmountOfOperations(tempStr)
+  then ptNode^.fAmount:=ptNode^.fAmount+AmountOfOperations(tempStr)
   else cfDefineTypeOfExpression(memoPos, ptNode, memoCode, constrType);
 end;
 
@@ -60,13 +63,19 @@ var endIfSign: string;
 begin
   ptCurNode:=trAddElement(ptNode, ptNode^.fLevel+1, c_if);
   endIfSign:=cfDefineEndSymbol(memoPos+1, memoCode, '{', '}', ';');
+  if endIfSign='}'
+  then inc(memoPos);
+ // if cfDecodeString(memoPos, ptNode, memoCode);
   cfCycleFindOperationsUntilFoundEndSymbol(endIfSign, memoPos, ptCurNode, memoCode);
-  if pos('else', GetStringFromMemo(memoPos+1, memoCode))<>0
+  inc(memoPos);
+  //проблема с вложенными циклами
+  if pos('else', GetStringFromMemo(memoPos, memoCode))<>0
   then begin
     endIfSign:=cfDefineEndSymbol(memoPos+1, memoCode, '{', '}', ';');
+    if endIfSign='}'
+    then inc(memoPos);
     cfCycleFindOperationsUntilFoundEndSymbol(endIfSign, memoPos, ptCurNode, memoCode);
   end;
-  inc(memoPos);
 end;
 
 procedure cfSwitch_Operate(var memoPos: integer; var ptNode: pTRec; const memoCode: TStrings);
