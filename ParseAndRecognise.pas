@@ -11,10 +11,7 @@ function RecogniseOperation(const Input: string): TConstructionType;
 
 function ConvertStrToType(const s: string): TConstructionType; //ставит в соответствие 'if'-строке тип C_if
 
-
-procedure DeleteComments(var Input: TStrings);
-
-implementation
+implementation
 
 function RecogniseOperation;
 var
@@ -97,50 +94,6 @@ begin
       end
 
     until i = 0
-end;
-
-procedure DeleteComments;
-var
-  CommentPosB, CommentPosE, CommentStrB, CommentStrE, i: Integer;
-  TempStr: string;
-begin
-  i := 0;
-  while i < Input.Capacity do   //возможно, нужно уменьшить на 1
-  begin
-     //1. Удаление однострочного комментария
-    CommentPosB := Pos('//', Input[i]);
-    if i <> 0 then
-    begin
-      TempStr := Input.Strings[i];
-      Delete(TempStr, CommentPosB, Length(Input.Strings[i]) - CommentPosB + 1);
-      Input.Strings[i] := TempStr;
-    end;
-  end;
-
-  i := 0;
-  while i < Input.Capacity do   //возможно, нужно уменьшить на 1
-  begin
-     //1. Удаление однострочного комментария
-    CommentPosB := Pos('/*', Input[i]);
-    CommentStrB := i;
-    if i <> 0 then
-    begin
-
-      repeat
-        CommentPosE := Pos('*/', Input[i]);
-        Inc(i);
-      until CommentPosE <> 0;
-      CommentStrE := i - 1;
-
-      if CommentStrB = CommentStrE then  //здесь ещё не дописано
-      begin
-        TempStr := Input.Strings[i];
-        Delete(TempStr, CommentPosB, Length(Input.Strings[i]) - CommentPoE + 1);
-        Input.Strings[i] := TempStr;
-      end;
-    end;
-  end;
-
 end;
 
 end.

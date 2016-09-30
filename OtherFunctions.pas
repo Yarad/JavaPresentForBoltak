@@ -6,6 +6,7 @@ uses UsesUnit, StdCtrls;
 
 procedure ofDeleteComments(var str: string);
 procedure LoadTextFromFileToMemo(const fileName: string; memoCode: TMemo);
+procedure ofDeleteInnerFigure(var Input: string; BrakeSymbolOpen: Char = '('; BrakeSymbolClose: Char = ')'); //удаляет инфромацию между скобками, тип которых задан BrakeSymbol. По умолчанию скобки ()
 
 implementation
 
@@ -102,6 +103,30 @@ begin
   ofReplaceAll(str, #13#13#10#10, #13#10);
   if pos(#13#10, str)=1
   then delete(str, 1, 2);
+end;
+
+procedure ofDeleteInnerFigure;
+var
+  i, BrakesOpenPos, BrakesClosePos: Integer;
+  WasFound: Boolean;
+begin
+  BrakesOpenPos := -1;
+  BrakesClosePos := -1;
+
+  for i := 0 to Length(Input) - 1 do
+  begin
+    if Input[i] = BrakeSymbolOpen then
+    begin
+      BrakesOpenPos := i;
+      Break;
+    end
+  end;
+  for i := 0 to Length(Input) - 1 do
+    if Input[i] = BrakeSymbolClose then
+      BrakesClosePos := i;
+      
+  if (BrakesOpenPos <> -1) and (BrakesClosePos <> -1) then
+    Delete(Input, BrakesOpenPos + 1, BrakesClosePos - BrakesOpenPos - 1);
 end;
 
 end.
