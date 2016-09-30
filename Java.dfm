@@ -1,8 +1,8 @@
 object frmMain: TfrmMain
   Left = 349
-  Top = 165
+  Top = 164
   Width = 1068
-  Height = 590
+  Height = 591
   Caption = #1052#1077#1090#1088#1086#1083#1086#1075#1080#1103
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -13,30 +13,31 @@ object frmMain: TfrmMain
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 18
-  object lbFileNameChosen: TLabel
+  object memoSource: TMemo
     Left = 8
-    Top = 8
-    Width = 114
-    Height = 18
-    Caption = #1060#1072#1081#1083' '#1085#1077' '#1074#1099#1073#1088#1072#1085'!'
-    Layout = tlCenter
-  end
-  object memoCode: TMemo
-    Left = 8
-    Top = 88
+    Top = 56
     Width = 457
-    Height = 457
+    Height = 241
     ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 0
   end
   object btnLoadText: TButton
     Left = 8
-    Top = 40
+    Top = 8
     Width = 457
     Height = 33
     Action = aLoadCode
     TabOrder = 1
+  end
+  object memoCode: TMemo
+    Left = 8
+    Top = 304
+    Width = 457
+    Height = 241
+    ReadOnly = True
+    ScrollBars = ssVertical
+    TabOrder = 2
   end
   object dlgFileOpen: TOpenDialog
     Filter = 'Java Files|*.java'

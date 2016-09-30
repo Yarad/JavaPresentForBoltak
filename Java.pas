@@ -8,12 +8,12 @@ uses
 
 type
   TfrmMain = class(TForm)
-    memoCode: TMemo;
+    memoSource: TMemo;
     btnLoadText: TButton;
-    lbFileNameChosen: TLabel;
     dlgFileOpen: TOpenDialog;
     alMain: TActionList;
     aLoadCode: TAction;
+    memoCode: TMemo;
     procedure aLoadCodeExecute(Sender: TObject);
   private
     procedure CalcMetriks(const fileName: string);
@@ -42,12 +42,17 @@ end;
 procedure TfrmMain.LoadTextAndDecode(const fileName: string);
 var tempStr: string;
 begin
+  memoSource.Lines.BeginUpdate;
+  memoSource.Lines.Clear;
+  LoadTextFromFileToMemo(fileName, memoSource);
+  memoSource.Lines.EndUpdate;
+  tempStr:=memoSource.Lines.Text;
+  ofDeleteComments(tempStr);
   memoCode.Lines.BeginUpdate;
   memoCode.Lines.Clear;
-  LoadTextFromFileToMemo(fileName, memoCode);
-  tempStr:=memoCode.Lines.Text;
-  ofDeleteComments(tempStr);
   memoCode.Lines.Text:=tempStr;
+  memoCode.Lines.Text:=trim(memoCode.Lines.Text);
+  ofDeleteFiguresFromText(memoCode);
   memoCode.Lines.EndUpdate;
 end;
 

@@ -6,25 +6,48 @@ uses
   UsesUnit, Classes;
 
 function AmountOfOperations(const s: string): Integer; //кол-во операций в строке
-
 function RecogniseOperation(const Input: string): TConstructionType;
 
-function ConvertStrToType(const s: string): TConstructionType; //ставит в соответствие 'if'-строке тип C_if
-
 implementation
+
+function ConvertStrToType(const s: string): TConstructionType; //ставит в соответствие 'if'-строке тип C_if
+begin
+  if s = 'if' then
+  begin
+    Result := c_if;
+    Exit;
+  end;
+  if s = 'switch' then
+  begin
+    Result := c_switch;
+    Exit;
+  end;
+  if (s = 'while') or (s = 'for') then
+  begin
+    Result := c_precycle;
+    Exit;
+  end;
+  if (s = 'do') then
+  begin
+    Result := c_postcycle;
+    Exit;
+  end;
+  if (s = 'break') or (s = 'continue') then
+  begin
+    Result := c_go;
+    Exit;
+  end;
+end;
 
 function RecogniseOperation;
 var
   i, FoundPos: Integer;
   NextSymbolAfterID: Char; // символ после ключевого слова, котрое мы ищем
 
-
-begin
+begin
   Result := C_other;    //<-если ничего не найдём
 
-
-
-  for i := Low(CIDsOfOperations) to High(CIDsOfOperations) do
+  for i := Low(CIDsOfOperations) to High(CIDsOfOperations) do
   begin
     FoundPos := Pos(CIDsOfOperations[i], Input);
     if FoundPos <> 0 then
@@ -47,31 +70,6 @@ begin
     end;
   end;
 
-end;
-
-function ConvertStrToType;
-begin
-  if s = 'if' then
-  begin
-    Result := c_if;
-    Exit;
-  end;
-  if s = 'switch' then
-  begin
-    Result := c_switch;
-    Exit;
-  end;
-  if (s = 'while') or (s = 'for') or (s = 'do') then
-  begin
-    Result := c_cycle;
-    Exit;
-  end;
-
-  if (s = 'break') or (s = 'continue') then
-  begin
-    Result := c_go;
-    Exit;
-  end;
 end;
 
 function AmountOfOperations;

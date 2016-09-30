@@ -5,10 +5,18 @@ interface
 uses
   usesUnit;
 
+function CreateElement(fLevel: Integer; fConstr: TConstructionType; fAmount: Integer = 0): tRec;
 function trCreateRoot: ptRec;
 function trAddElement(const ptNode: pTRec; fLevel: Integer; fConstr: TConstructionType; fAmount: Integer = 0): pTRec;
 
 implementation
+
+function CreateElement;
+begin
+  Result.fLevel := fLevel;
+  Result.fConstr := fConstr;
+  Result.fAmount := fAmount;
+end;
 
 function trCreateRoot;
 begin

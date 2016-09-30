@@ -6,7 +6,8 @@ uses UsesUnit, StdCtrls;
 
 procedure ofDeleteComments(var str: string);
 procedure LoadTextFromFileToMemo(const fileName: string; memoCode: TMemo);
-procedure ofDeleteInnerFigure(var Input: string; BrakeSymbolOpen: Char = '('; BrakeSymbolClose: Char = ')'); //удаляет инфромацию между скобками, тип которых задан BrakeSymbol. По умолчанию скобки ()
+//procedure ofDeleteInnerFigure(var Input: string; BrakeSymbolOpen: Char = '('; BrakeSymbolClose: Char = ')'); //удаляет инфромацию между скобками, тип которых задан BrakeSymbol. По умолчанию скобки ()
+procedure ofDeleteFiguresFromText(memoCode: TMemo);
 
 implementation
 
@@ -27,13 +28,12 @@ begin
   memoCode.Lines.Text:=trim(memoCode.Lines.Text);
 end;
 
-procedure ofDeleteStringPartFromTo(var str: string; const strBegin, strEnd: string; const with1, with2: boolean);
+procedure ofDeleteStringPartFromTo(var str: string; const strBegin, strEnd: string; const with2: boolean);
 var tempStr: string;
-    posSymb, commentLen, strLen, strEndLen, strBeginLen: integer;
+    posSymb, commentLen, strLen, strEndLen: integer;
 begin
   strLen:=Length(str);
   strEndLen:=Length(strEnd);
-  strBeginLen:=Length(strBegin);
   while pos(strBegin, str)<>0
   do begin
     posSymb:=pos(strBegin, str);
@@ -41,15 +41,9 @@ begin
     commentLen:=pos(strEnd, tempStr);
     if commentLen<>0
     then begin
-      if (with1) and (with2)
+      if with2
       then delete(str, posSymb, commentLen-1+strEndLen)
-      else
-        if with1
-        then delete(str, posSymb, commentLen-1)
-        else
-          if with2
-          then delete(str, posSymb+strBeginLen, commentLen-1+strEndLen)
-          else delete(str, posSymb+strBeginLen, commentLen-1);
+      else delete(str, posSymb, commentLen-1);
     end
     else delete(str, posSymb, strLen+1-posSymb);
   end;
@@ -85,34 +79,13 @@ begin
   end;
 end;
 
-procedure ofDeleteComments(var str: string);
-begin
-  ofDeleteStringPartFromTo(str, '//', #13#10, true, false);
-  ofDeleteStringPartFromTo(str, '/*', '*/', true, true);
-  //ofDeleteStringPartFromTo(str, '(', ')', false, false);
-  //ofDeleteStringPartFromTo(str, '[', ']', false, false);
-  ofReplaceAll(str, #9, ' ');
-  ofReplaceAll(str, #13#10+' ', #13#10);
-  ofReplaceAll(str, ' '+#13#10, #13#10);
-  AddNewLinesAfterSymbol(str, '{'+ #13#10);
-  AddNewLinesAfterSymbol(str, 'else');
-  AddNewLinesAfterSymbol(str, #13#10+'}');
-  ofReplaceAll(str, '  ', ' ');
-  ofReplaceAll(str, #13#10+' '+#13#10, #13#10);
-  ofReplaceAll(str, #13#10#13#10, #13#10);
-  ofReplaceAll(str, #13#13#10#10, #13#10);
-  if pos(#13#10, str)=1
-  then delete(str, 1, 2);
-end;
-
-procedure ofDeleteInnerFigure;
+procedure ofDeleteInnerFigure(var Input: string; BrakeSymbolOpen: Char = '('; BrakeSymbolClose: Char = ')'); //удаляет инфромацию между скобками, тип которых задан BrakeSymbol. По умолчанию скобки ()
 var
   i, BrakesOpenPos, BrakesClosePos: Integer;
   WasFound: Boolean;
 begin
   BrakesOpenPos := -1;
   BrakesClosePos := -1;
-
   for i := 0 to Length(Input) - 1 do
   begin
     if Input[i] = BrakeSymbolOpen then
@@ -127,6 +100,37 @@ begin
       
   if (BrakesOpenPos <> -1) and (BrakesClosePos <> -1) then
     Delete(Input, BrakesOpenPos + 1, BrakesClosePos - BrakesOpenPos - 1);
+end;
+
+procedure ofDeleteFiguresFromText(memoCode: TMemo);
+var count: integer;
+    tempStr: string;
+begin
+  for count:=0 to (memoCode.Lines.Count-1)
+  do begin
+    tempStr:=memoCode.Lines[count];
+    ofDeleteInnerFigure(tempStr);
+    ofDeleteInnerFigure(tempStr, '[', ']');
+    memoCode.Lines[count]:=tempStr;
+  end;
+end;
+
+procedure ofDeleteComments(var str: string);
+begin
+  ofDeleteStringPartFromTo(str, '//', #13#10, false);
+  ofDeleteStringPartFromTo(str, '/*', '*/', true);
+  ofReplaceAll(str, #9, ' ');
+  ofReplaceAll(str, #13#10+' ', #13#10);
+  ofReplaceAll(str, '  ', ' ');
+  AddNewLinesAfterSymbol(str, 'else');
+  AddNewLinesAfterSymbol(str, '{'+ #13#10);
+  AddNewLinesAfterSymbol(str, #13#10+'}');
+  ofReplaceAll(str, #13#10+' ', #13#10);
+  ofReplaceAll(str, ' '+#13#10, #13#10);
+  ofReplaceAll(str, #13#10+' '+#13#10, #13#10);
+  ofReplaceAll(str, #13#10#13#10, #13#10);
+  if pos(#13#10, str)=1
+  then delete(str, 1, 2);
 end;
 
 end.
