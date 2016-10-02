@@ -84,10 +84,8 @@ begin
       i := Pos(COperationsUsed[Oper], UnParsedString);
 
       if i <> 0 then //если нашли
-
-
-      begin
-        Inc(Result);
+      begin
+        Inc(Result);
         Delete(UnParsedString, i, Length(COperationsUsed[Oper]));
       end
 
