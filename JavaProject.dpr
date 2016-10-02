@@ -9,7 +9,8 @@ uses
   Tree in 'Tree.pas',
   ConstrFunctions in 'ConstrFunctions.pas',
   OtherFunctions in 'OtherFunctions.pas',
-  ParseAndRecognise in 'ParseAndRecognise.pas';
+  ParseAndRecognise in 'ParseAndRecognise.pas',
+  Metrix in 'Metrix.pas';
 
 {$R *.res}
 

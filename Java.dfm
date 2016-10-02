@@ -1,9 +1,10 @@
 object frmMain: TfrmMain
   Left = 349
   Top = 164
-  Width = 1068
-  Height = 591
+  BorderStyle = bsDialog
   Caption = #1052#1077#1090#1088#1086#1083#1086#1075#1080#1103
+  ClientHeight = 552
+  ClientWidth = 1052
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,16 +17,16 @@ object frmMain: TfrmMain
   object memoSource: TMemo
     Left = 8
     Top = 56
-    Width = 457
+    Width = 585
     Height = 241
     ReadOnly = True
-    ScrollBars = ssVertical
+    ScrollBars = ssBoth
     TabOrder = 0
   end
   object btnLoadText: TButton
     Left = 8
     Top = 8
-    Width = 457
+    Width = 585
     Height = 33
     Action = aLoadCode
     TabOrder = 1
@@ -33,11 +34,26 @@ object frmMain: TfrmMain
   object memoCode: TMemo
     Left = 8
     Top = 304
-    Width = 457
+    Width = 585
     Height = 241
     ReadOnly = True
-    ScrollBars = ssVertical
+    ScrollBars = ssBoth
     TabOrder = 2
+  end
+  object memoResult: TMemo
+    Left = 608
+    Top = 8
+    Width = 433
+    Height = 537
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -17
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    ReadOnly = True
+    ScrollBars = ssVertical
+    TabOrder = 3
   end
   object dlgFileOpen: TOpenDialog
     Filter = 'Java Files|*.java'

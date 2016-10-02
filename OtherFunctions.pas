@@ -6,8 +6,8 @@ uses UsesUnit, StdCtrls;
 
 procedure ofDeleteComments(var str: string);
 procedure LoadTextFromFileToMemo(const fileName: string; memoCode: TMemo);
-//procedure ofDeleteInnerFigure(var Input: string; BrakeSymbolOpen: Char = '('; BrakeSymbolClose: Char = ')'); //удаляет инфромацию между скобками, тип которых задан BrakeSymbol. По умолчанию скобки ()
 procedure ofDeleteFiguresFromText(memoCode: TMemo);
+function ofConvertRealToString(const expierence: real): string;
 
 implementation
 
@@ -27,7 +27,6 @@ begin
   CloseFile(tempFile);
   memoCode.Lines.Text:=trim(memoCode.Lines.Text);
 end;
-
 procedure ofDeleteStringPartFromTo(var str: string; const strBegin, strEnd: string; const with2: boolean);
 var tempStr: string;
     posSymb, commentLen, strLen, strEndLen: integer;
@@ -82,7 +81,6 @@ end;
 procedure ofDeleteInnerFigure(var Input: string; BrakeSymbolOpen: Char = '('; BrakeSymbolClose: Char = ')'); //удаляет инфромацию между скобками, тип которых задан BrakeSymbol. По умолчанию скобки ()
 var
   i, BrakesOpenPos, BrakesClosePos: Integer;
-  WasFound: Boolean;
 begin
   BrakesOpenPos := -1;
   BrakesClosePos := -1;
@@ -125,12 +123,19 @@ begin
   AddNewLinesAfterSymbol(str, 'else');
   AddNewLinesAfterSymbol(str, '{'+ #13#10);
   AddNewLinesAfterSymbol(str, #13#10+'}');
+  //вызовы процелуры, встаялвющей #13#10 при опред. условиях
   ofReplaceAll(str, #13#10+' ', #13#10);
   ofReplaceAll(str, ' '+#13#10, #13#10);
   ofReplaceAll(str, #13#10+' '+#13#10, #13#10);
   ofReplaceAll(str, #13#10#13#10, #13#10);
   if pos(#13#10, str)=1
   then delete(str, 1, 2);
+end;
+
+function ofConvertRealToString(const expierence: real): string;
+begin
+  result:=FloatToStr(expierence);
+  delete(result, 6, Length(result)-5);
 end;
 
 end.

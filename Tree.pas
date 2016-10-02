@@ -11,6 +11,8 @@ function trAddElement(const ptNode: pTRec; fLevel: Integer; fConstr: TConstructi
 
 implementation
 
+uses SysUtils;
+
 function CreateElement;
 begin
   Result.fLevel := fLevel;
@@ -21,7 +23,7 @@ end;
 function trCreateRoot;
 begin
   New(result);
-  result^:=CreateElement(0, C_modul, 0);
+  result^:=CreateElement(-1, C_modul, 0);
 end;
 
 function trAddElement;
