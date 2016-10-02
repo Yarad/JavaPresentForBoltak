@@ -40,7 +40,7 @@ procedure TfrmMain.aLoadCodeExecute(Sender: TObject);
 begin
   if dlgFileOpen.Execute
   then begin
-    aLoadCode.Enabled:=false;
+    trDeleteTree(tree);
     CalcMetriks(dlgFileOpen.Files[0]);
   end;
 end;
@@ -51,6 +51,7 @@ begin
   memoSource.Lines.BeginUpdate;
   memoSource.Lines.Clear;
   LoadTextFromFileToMemo(fileName, memoSource);
+  ofDeleteFiguresFromText(memoSource);
   memoSource.Lines.EndUpdate;
   tempStr:=memoSource.Lines.Text;
   ofDeleteComments(tempStr);
@@ -58,7 +59,6 @@ begin
   memoCode.Lines.Clear;
   memoCode.Lines.Text:=tempStr;
   memoCode.Lines.Text:=trim(memoCode.Lines.Text);
-  ofDeleteFiguresFromText(memoCode);
   memoCode.Lines.EndUpdate;
 end;
 

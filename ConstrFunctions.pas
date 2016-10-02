@@ -40,10 +40,11 @@ begin
   if (constrType in [c_Operation, c_modul, C_other, C_go])
   then result:=true;
   if (constrType=C_go)
-  then inc(ptNode^.fAmount);
-  if constrType=c_Operation
-  then ptNode^.fAmount:=ptNode^.fAmount+AmountOfOperations(tempStr)
-  else cfDefineTypeOfExpression(memoPos, ptNode, memoCode, constrType);
+  then inc(ptNode^.fAmount)
+  else
+    if constrType=c_Operation
+    then ptNode^.fAmount:=ptNode^.fAmount+AmountOfOperations(tempStr)
+    else cfDefineTypeOfExpression(memoPos, ptNode, memoCode, constrType);
 end;
 
 function cfDefineEndSymbol(const memoPos: integer; const memoCode: TStrings; findSymb, thenSymb, elseSymb: string): string;

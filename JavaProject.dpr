@@ -1,7 +1,5 @@
 program JavaProject;
 
-//Правильность кода
-
 uses
   Forms,
   Java in 'Java.pas' {frmMain},

@@ -85,7 +85,7 @@ begin
 
       if i <> 0 then //если нашли
       begin
-        Inc(Result);
+        Inc(Result);
         Delete(UnParsedString, i, Length(COperationsUsed[Oper]));
       end
 
